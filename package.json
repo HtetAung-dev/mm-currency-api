@@ -1,0 +1,24 @@
+{
+  "name": "mm-currency-api",
+  "version": "1.0.0",
+  "description": "Myanmar currency exchange api for all the currency over the world",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "fastify": "^5.5.0",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.26"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
