@@ -33,4 +33,24 @@ export class ExchangeRateService {
     if (!rate) throw new NotFoundError('Exchange rate not found')
     return { amount, converted: amount * rate.rate }
   }
+
+  async getRate(fromId: number, toId: number) {
+    const rate = await this.repo.findOne({
+      where: { fromCurrency: { id: fromId }, toCurrency: { id: toId } },
+      relations: ['fromCurrency', 'toCurrency'],
+    })
+    if (!rate) throw new NotFoundError('Exchange rate not found')
+    return rate
+  }
+
+  async getRateByFromId(fromId: number) {
+    const rates = await this.repo.find({
+      where: { fromCurrency: { id: fromId } },
+      relations: ['fromCurrency', 'toCurrency'],
+    })
+    if (!rates || rates.length === 0) {
+      throw new NotFoundError('No exchange rates found for the given fromId')
+    }
+    return rates
+  }
 }

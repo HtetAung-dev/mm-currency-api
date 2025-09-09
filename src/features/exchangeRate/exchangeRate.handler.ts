@@ -37,3 +37,19 @@ export const convert = async (req: FastifyRequest, reply: FastifyReply) => {
   const result = await service.convert(fromId, toId, amount)
   reply.send(result)
 }
+
+export const getRate = async (req: FastifyRequest, reply: FastifyReply) => {
+  const { fromId, toId } = req.query as { fromId?: string; toId?: string }
+  
+  const result = await service.getRate(Number(fromId), Number(toId))
+  reply.send(result)
+}
+
+export const getRateByFromId = async (req: FastifyRequest, reply: FastifyReply) => {
+  const { fromId } = req.query as { fromId?: string }
+  if (!fromId || isNaN(Number(fromId))) {
+    throw new BadRequestError('fromId must be a valid number')
+  }
+  const result = await service.getRateByFromId(Number(fromId))
+  reply.send(result)
+}

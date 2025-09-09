@@ -16,8 +16,8 @@ export async function buildApp() {
     throw err
   }
 
-  app.register(currencyRoutes)
-  app.register(exchangeRoutes)
+  app.register(currencyRoutes, { prefix: '/currency'})
+  app.register(exchangeRoutes, { prefix: '/exchange'})
 
   app.setErrorHandler((error, _request, reply) => {
     const { statusCode, body } = toResponse(error)
