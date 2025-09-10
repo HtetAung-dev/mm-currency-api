@@ -4,28 +4,36 @@ import currencyRoutes from "./features/currency/currency.route";
 import { AppDataSource } from "./db/data-source";
 import exchangeRoutes from "./features/exchangeRate/exchageRate.route";
 import { AppError, toResponse } from "./utils/errors";
-import fastifyMultipart from "@fastify/multipart";
+import multipart from "@fastify/multipart";
+import authKeyPlugin from "./plugins/auth-key";
 
 export async function buildApp() {
   const app = Fastify({ logger: true });
   await app.register(cors);
 
   try {
-    await AppDataSource.initialize();
+    await AppDataSource.initialize().then(async () => {
+      await AppDataSource.query("SET TIME ZONE 'Asia/Yangon';");
+    });
   } catch (err) {
     app.log.error({ err }, "Failed to initialize data source");
     throw err;
   }
 
-  app.register(currencyRoutes, { prefix: "/currency" });
-  app.register(exchangeRoutes, { prefix: "/exchange" });
-
-  app.register(fastifyMultipart, {
+  await app.register(multipart, {
     limits: {
       fileSize: 5 * 1024 * 1024,
       files: 1,
     },
   });
+
+  app.register(authKeyPlugin);
+
+  app.register(currencyRoutes, { prefix: "/currency" });
+  app.register(exchangeRoutes, { prefix: "/exchange" });
+
+
+
 
   app.setErrorHandler((error, _request, reply) => {
     const { statusCode, body } = toResponse(error);

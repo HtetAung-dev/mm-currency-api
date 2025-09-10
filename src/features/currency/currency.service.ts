@@ -5,21 +5,24 @@ import { BadRequestError, ConflictError } from '../../utils/errors'
 export class CurrencyService {
   private repo = AppDataSource.getRepository(Currency)
 
-  async create(code: string, name: string) {
+  async create(code: string, name: string, buffer: string | null) {
     const normalizedCode = code.trim().toUpperCase()
     const normalizedName = name.trim()
     if (!normalizedCode || !normalizedName) {
       throw new BadRequestError('code and name must be non-empty strings')
     }
     const existing = await this.repo.findOne({ where: { code: normalizedCode } })
+
+    console.log('buffer - --- - - -', buffer)
     if (existing) {
       throw new ConflictError('Currency code already exists')
     }
-    const currency = this.repo.create({ code: normalizedCode, name: normalizedName })
+    const currency = this.repo.create({ code: normalizedCode, name: normalizedName, imageUrl: buffer })
     return this.repo.save(currency)
   }
 
   async list() {
-    return this.repo.find()
+    const result = this.repo.find();
+    return result;
   }
 }
