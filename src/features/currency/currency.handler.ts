@@ -13,12 +13,21 @@ export const addCurrency = async (req: FastifyRequest, reply: FastifyReply) => {
     if (part.file) {
       // It's a file
       if (part.fieldname === "file") {
-        const allowedTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
+        const allowedTypes = [
+          "image/png",
+          "image/jpg",
+          "image/jpeg",
+          "image/webp",
+        ];
         if (!allowedTypes.includes(part.mimetype)) {
-          throw new BadRequestError("Only PNG, JPEG, and WEBP images are allowed.");
+          throw new BadRequestError(
+            "Only PNG, JPEG, and WEBP images are allowed."
+          );
         }
         const buffer = await part.toBuffer();
-        fileBuffer = `data:${part.mimetype};base64,${buffer.toString('base64')}`;
+        fileBuffer = `data:${part.mimetype};base64,${buffer.toString(
+          "base64"
+        )}`;
       }
     } else if (part.value) {
       // It's a text field
@@ -41,4 +50,17 @@ export const listCurrencies = async (
 ) => {
   const currencies = await service.list();
   reply.send(currencies);
+};
+
+export const deleteCurrency = async (
+  req: FastifyRequest,
+  reply: FastifyReply
+) => {
+  const { id } = req.query as { id?: string };
+  if (!id || isNaN(Number(id))) {
+    throw new BadRequestError("id must be a valid number");
+  }
+
+  const result = await service.deleteCurrency(Number(id));
+  reply.send(result);
 };
