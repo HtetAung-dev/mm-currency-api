@@ -5,7 +5,7 @@ export class GoldRate {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column("text")
+  @Column({ type: "varchar", length: 255, nullable: false })
   name!: string;
 
   @Column("float")

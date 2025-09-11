@@ -6,10 +6,10 @@ const service = new GoldRateService();
 
 export const addGoldRate = async (req: FastifyRequest, reply: FastifyReply) => {
   const { name, rate, buyRate, sellRate } = req.body as {
-    name?: string;
-    rate?: number;
-    buyRate?: number;
-    sellRate?: number;
+    name: string;
+    rate: number;
+    buyRate: number;
+    sellRate: number;
   };
 
   // Validate required fields

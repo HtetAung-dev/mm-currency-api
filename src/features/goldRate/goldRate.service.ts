@@ -5,12 +5,7 @@ import { BadRequestError, NotFoundError } from "../../utils/errors";
 export class GoldRateService {
   private repo = AppDataSource.getRepository(GoldRate);
 
-  async create(
-    name: string,
-    rate: number,
-    buyRate?: number,
-    sellRate?: number
-  ) {
+  async create(name: string, rate: number, buyRate: number, sellRate: number) {
     const normalizedName = name.trim();
 
     if (!normalizedName || rate == null) {
@@ -26,9 +21,9 @@ export class GoldRateService {
       throw new BadRequestError("Gold rate with this name already exists");
     }
 
-    const goldRate = this.repo.create({
-      name: normalizedName,
-      rate,
+    const goldRate: GoldRate = this.repo.create({
+      name: normalizedName!,
+      rate: rate,
       buyRate: buyRate ?? null,
       sellRate: sellRate ?? null,
       changeValue: 0,
