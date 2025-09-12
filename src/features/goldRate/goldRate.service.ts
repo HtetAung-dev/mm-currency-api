@@ -12,15 +12,6 @@ export class GoldRateService {
       throw new BadRequestError("name must be non-empty and rate is required");
     }
 
-    // check if gold rate with same name exists
-    const existing = await this.repo.findOne({
-      where: { name: normalizedName },
-    });
-
-    if (existing) {
-      throw new BadRequestError("Gold rate with this name already exists");
-    }
-
     const goldRate: GoldRate = this.repo.create({
       name: normalizedName!,
       rate: rate,
