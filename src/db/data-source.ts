@@ -4,6 +4,7 @@ import { Currency } from "../features/currency/currency.entity";
 import { ExchangeRate } from "../features/exchangeRate/exchangeRate.entity";
 import * as dotenv from "dotenv";
 import { GoldRate } from "../features/goldRate/goldRate.entity";
+import { Blog } from "../features/blog/blog.entity";
 
 dotenv.config();
 
@@ -18,5 +19,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true, // ❌ use migrations in prod
   logging: true,
-  entities: [Currency, ExchangeRate, GoldRate],
+  entities: [Currency, ExchangeRate, GoldRate, Blog],
 });
