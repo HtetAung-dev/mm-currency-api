@@ -12,7 +12,6 @@ export const addGoldRate = async (req: FastifyRequest, reply: FastifyReply) => {
     sellRate: number;
   };
 
-  // Validate required fields
   if (!name || rate == null) {
     throw new BadRequestError("name and rate are required");
   }

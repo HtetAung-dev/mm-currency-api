@@ -60,9 +60,9 @@ export const updateBlog = async (req: FastifyRequest, reply: FastifyReply) => {
   let description: string | undefined;
   let id: string | undefined;
 
+  // Parse multipart form-data
   for await (const part of (req as any).parts()) {
     if (part.file) {
-      // Handle file
       if (part.fieldname === "file") {
         const allowedTypes = [
           "image/png",
@@ -75,6 +75,7 @@ export const updateBlog = async (req: FastifyRequest, reply: FastifyReply) => {
             "Only PNG, JPEG, and WEBP images are allowed."
           );
         }
+
         const buffer = await part.toBuffer();
         fileBuffer = `data:${part.mimetype};base64,${buffer.toString(
           "base64"
@@ -88,19 +89,26 @@ export const updateBlog = async (req: FastifyRequest, reply: FastifyReply) => {
     }
   }
 
+  // Validate ID
   if (!id || isNaN(Number(id))) {
     throw new BadRequestError("id must be a valid number");
   }
-  if (!name || !description) {
-    throw new BadRequestError("name and description are required");
+
+  // Validate at least one update field
+  if (!name && !description && !fileBuffer) {
+    throw new BadRequestError(
+      "At least one of name, description, or file must be provided"
+    );
   }
 
+  // Call your service to update (supporting partials)
   const blog = await service.update(
     Number(id),
-    name.trim(),
-    description.trim(),
+    name ? name.trim() : undefined,
+    description ? description.trim() : undefined,
     fileBuffer
   );
+
   reply.send(blog);
 };
 

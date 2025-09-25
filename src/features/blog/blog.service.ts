@@ -31,23 +31,30 @@ export class BlogService {
 
   async update(
     id: number,
-    name: string,
-    description: string,
-    buffer: string | null
+    name?: string,
+    description?: string,
+    buffer?: string | null
   ) {
     const blog = await this.repo.findOneBy({ id });
     if (!blog) {
       throw new NotFoundError("Blog ID not found");
     }
 
-    const normalizedCode = name.trim().toUpperCase();
-    const normalizedName = description.trim();
-    if (!normalizedCode || !normalizedName) {
-      throw new BadRequestError("code and name must be non-empty strings");
+    if (name !== undefined) {
+      const normalizedName = name.trim().toUpperCase();
+      if (!normalizedName) {
+        throw new BadRequestError("name must be a non-empty string");
+      }
+      blog.name = normalizedName;
     }
 
-    blog.name = normalizedCode;
-    blog.description = normalizedName;
+    if (description !== undefined) {
+      const normalizedDescription = description.trim();
+      if (!normalizedDescription) {
+        throw new BadRequestError("description must be a non-empty string");
+      }
+      blog.description = normalizedDescription;
+    }
 
     if (buffer) {
       blog.imageUrl = buffer;

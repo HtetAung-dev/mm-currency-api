@@ -5,6 +5,7 @@ import { AppDataSource } from "./db/data-source";
 import exchangeRoutes from "./features/exchangeRate/exchageRate.route";
 import goldRateRoutes from "./features/goldRate/goldRate.route";
 import blogRoutes from "./features/blog/blog.route";
+import pushRoutes from "./features/pushNotification/push.route";
 import { AppError, toResponse } from "./utils/errors";
 import multipart from "@fastify/multipart";
 import authKeyPlugin from "./plugins/auth-key";
@@ -35,6 +36,7 @@ export async function buildApp() {
   app.register(exchangeRoutes, { prefix: "/exchange" });
   app.register(goldRateRoutes, { prefix: "/gold" });
   app.register(blogRoutes, { prefix: "/blog" });
+  app.register(pushRoutes, { prefix: "/push" });
 
   app.setErrorHandler((error, _request, reply) => {
     const { statusCode, body } = toResponse(error);
